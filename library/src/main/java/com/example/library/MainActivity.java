@@ -156,6 +156,8 @@ public class MainActivity extends Activity {
             }
 
             case MotionEvent.ACTION_UP: {
+
+                
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
