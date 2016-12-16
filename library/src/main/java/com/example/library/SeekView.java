@@ -25,9 +25,9 @@ public class SeekView {
         mContext = context;
         ViewGroup layout = (ViewGroup) ((Activity) context).findViewById(android.R.id.content).getRootView();
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.custom_view, null);
-        v.setScaleY(3.3f);
-        v.setScaleX(2f);
+        v = inflater.inflate(R.layout.custom_seekview, null);
+//        v.setScaleY(1.5f);
+//        v.setScaleX(1.5f);
         v.getBackground().setAlpha(100);
         tv=(TextView)v.findViewById(R.id.textView3);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -38,14 +38,14 @@ public class SeekView {
         rl.addView(v);
         layout.addView(rl, params);
         v.requestLayout();
-        v.setVisibility(View.INVISIBLE);
-    }
-
-    public void show() {
         v.setVisibility(View.VISIBLE);
     }
-
-    public void hide() {
+    public void show()
+    {
+        v.setVisibility(View.VISIBLE);
+    }
+    public void hide()
+    {
         v.setVisibility(View.INVISIBLE);
 
     }

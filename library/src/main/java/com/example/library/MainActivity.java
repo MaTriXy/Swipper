@@ -32,9 +32,10 @@ public class MainActivity extends Activity {
     long touchDownMs = 0;
     SeekView sv;
     VideoView video;
-    float seekdistance;
+    float seekdistance=0;
+    float volumeSum=0;
 
-    public void set(Context context) {
+    public void set(Context context,VideoView vv) {
         cv = new CustomView(context);
         sv = new SeekView(context);
         brightness = android.provider.Settings.System.getFloat(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
@@ -47,6 +48,7 @@ public class MainActivity extends Activity {
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        video=vv;
     }
 
     @Override
@@ -55,7 +57,8 @@ public class MainActivity extends Activity {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
-                seekdistance=0;
+                seekdistance = 0;
+                volumeSum=0;
                 touchDownMs = System.currentTimeMillis();
                 break;
             }
@@ -63,11 +66,14 @@ public class MainActivity extends Activity {
             case MotionEvent.ACTION_MOVE: {
                 final float x = ev.getX();
                 final float y = ev.getY();
-              /*  final float X = ev.getHistoricalX(0, 0);
+             /*   final float X = ev.getHistoricalX(0, 0);
                 final float Y = ev.getHistoricalY(0, 0);*/
                 d = getDistance(x, y, ev);
                 try {
-                    if (x == ev.getHistoricalX(0, 0)) {
+                    seek(video,ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "Y");
+//                   Volume(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
+
+                    /*if (x == ev.getHistoricalX(0, 0)) {
                         d = (getDistance(x, y, ev) / 270);
                         cv.setTitle("Brightness");
                         if (y < ev.getHistoricalY(0, 0)) {
@@ -104,12 +110,13 @@ public class MainActivity extends Activity {
                                 cv.setProgressText("0" + "%");
                             }
                         }
-                    }
+                    }*/
                 } catch (IllegalArgumentException e) {
 
                 }
                 try {
-                    if (y == ev.getHistoricalY(0, 0)) {
+//                    Volume(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
+                  /*  if (y == ev.getHistoricalY(0, 0)) {
                         cv.setTitle("  Volume     ");
                         if (x > ev.getHistoricalX(0, 0)) {
                             Log.e("in if", "in if");
@@ -148,7 +155,7 @@ public class MainActivity extends Activity {
                                 cv.setProgressText("0" + "%");
                             }
                         }
-                    }
+                    }*/
                 } catch (IllegalArgumentException e) {
 
                 }
@@ -156,8 +163,6 @@ public class MainActivity extends Activity {
             }
 
             case MotionEvent.ACTION_UP: {
-
-                
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -181,11 +186,20 @@ public class MainActivity extends Activity {
 
                 lastTapTimeMs = System.currentTimeMillis();
                 if (numberOfTaps == 2) {
-                    Log.e("in tap", "in tap");
-                    if (csk.isVisibile())
-                        csk.hide();
-                    else
-                        csk.show();
+                    String type = "Brightness";
+                    if (type == "Brightness") {
+                        csk.setType("Brightness");
+                        if (csk.isVisibile())
+                            csk.hide();
+                        else
+                            csk.show();
+                    } else if (type == "Volume") {
+                        csk.setType("Volume");
+                        if (csk.isVisibile())
+                            csk.hide();
+                        else
+                            csk.show();
+                    }
                 }
 
 
@@ -214,16 +228,17 @@ public class MainActivity extends Activity {
     }
 
     public void Volume(float X, float Y, float x, float y, float d, String type) {
-        cv.setTitle("Volume");
+        cv.setTitle(" Volume  ");
         if (type == "Y" && x == X) {
-            d = d / 270;
+            d = d /200;
             if (y < Y) {
                 commonVolume(d);
             } else {
                 commonVolume(-d);
             }
         } else if (type == "X" && y == Y) {
-            d = d / 160;
+            Log.e("pul", "in if");
+            d = d/100;
             if (x > X) {
                 commonVolume(d);
             } else {
@@ -236,11 +251,13 @@ public class MainActivity extends Activity {
     public void commonVolume(float d) {
         currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         per = (double) currentVolume / (double) maxVolume;
-        if (per + d < 1) {
+        Log.e("per",per+"");
+        volumeSum+=d;
+        if (per + volumeSum <= 1 && per + volumeSum >= 0) {
             cv.show();
-            cv.setProgress((int) ((per + d) * 100));
-            cv.setProgressText((int) ((per + d) * 100) + "%");
-            volper = (per + (d / (double) 160));
+            cv.setProgress((int) ((per + volumeSum) * 100));
+            cv.setProgressText((int) ((per + volumeSum) * 100) + "%");
+            volper = (per + (double)volumeSum);
             audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (volper * 15), 0);
         }
     }
@@ -278,34 +295,39 @@ public class MainActivity extends Activity {
 
     }
 
-    public void seek(MediaPlayer mp,float X, float Y, float x, float y, float d, String type) {
+    public void seek(VideoView mp, float X, float Y, float x, float y, float d, String type) {
 
         if (type == "Y" && x == X) {
-            d = d / 2700;
+            d = d/3000;
             if (y < Y) {
-                seekCommon(mp,d);
+                seekCommon(mp, d);
             } else {
-                seekCommon(mp,-d);
+                seekCommon(mp, -d);
             }
         } else if (type == "X" && y == Y) {
-            d = d / 1600;
+            d = d / 3000;
             if (x > X) {
-                seekCommon(mp,d);
+                seekCommon(mp, d);
             } else {
-                seekCommon(mp,-d);
+                seekCommon(mp, -d);
             }
         } else if (type == "circular") {
 
         }
     }
-    public void seekCommon(MediaPlayer mp,float d)
-    {
+
+    public void seekCommon(VideoView mp, float d) {
         if (mp != null) {
-            seekdistance+=d;
-            if(mp.getCurrentPosition() + (int)d*60000*3 >0 && mp.getCurrentPosition() + (int)d*60000*3<1)
-            {
-                mp.seekTo(mp.getCurrentPosition() + (int)d*60000*3);
-                sv.setText((int)(seekdistance*60000*3)+"");
+            seekdistance += d;
+            Log.e("current",mp.getCurrentPosition()+"");
+            Log.e("after",mp.getCurrentPosition() + (int) (seekdistance * 60000 * 1)+"");
+            Log.e("duration",mp.getDuration()+"");
+            Log.e("seek distance",(int) (seekdistance * 60000 * 1)+"");
+            if (mp.getCurrentPosition() + (int) (seekdistance * 60000 )* 1 > 0 && mp.getCurrentPosition() + (int) (seekdistance * 60000 * 1) < mp.getDuration()) {
+                mp.seekTo(mp.getCurrentPosition() + (int) (seekdistance * 60000 * 1));
+                Log.e("afterincrement",mp.getCurrentPosition()+"");
+                Log.e("duration",mp.getDuration()+"");
+                sv.setText((int) (seekdistance * 60000 * 1) + "");
             }
         }
     }

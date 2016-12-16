@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class CircularSeekBar {
 
     final Context mContext;
-    public static RelativeLayout rl;
+    private RelativeLayout rl;
     int percent;
     float brightness;
     private String Type;
