@@ -15,38 +15,38 @@ import android.widget.TextView;
 public class CircularSeekBar {
 
     final Context mContext;
-    private RelativeLayout rl;
-    int percent;
-    float brightness;
+    private int percent;
+    private float brightness;
     private String Type;
-    int currentVolume;
-    int maxVolume;
-    AudioManager audio;
-    private int value;
+    private int currentVolume;
+    private int maxVolume;
+    private AudioManager audio;
+    private int valueCounter;
+    public static RelativeLayout relativeLayout;
 
     public CircularSeekBar(Context context) {
         mContext = context;
         ViewGroup layout = (ViewGroup) ((Activity) context).findViewById(android.R.id.content).getRootView();
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        rl = new RelativeLayout(context) {
+        relativeLayout = new RelativeLayout(context) {
 
 
-            private int value = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
+            private int valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
             public TextView textView;
 
             {
                 if (Type == "Brightness") {
-                    value = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
+                    valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
                 } else if (Type == "Volume") {
                     currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    value = (int) (((float) currentVolume / (float) maxVolume) * 360 / 3f);
+                    valueCounter = (int) (((float) currentVolume / (float) maxVolume) * 360 / 3f);
                 }
                 addView(new DialView(getContext()) {
                     {
                         setStepAngle(3f);
                         setDiscArea(.30f, .43f);
                         setLastAngle((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360);
-                        value = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
+                        valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
                         Log.e("last Angle", (android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 + "");
                         brightness = android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
                         WindowManager.LayoutParams layout = ((Activity) mContext).getWindow().getAttributes();
@@ -54,7 +54,7 @@ public class CircularSeekBar {
                         ((Activity) mContext).getWindow().setAttributes(layout);
                         if (Type == "Brightness") {
                             setLastAngle((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360);
-                            value = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
+                            valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
                             Log.e("last Angle", (android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 + "");
                             brightness = android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
                             WindowManager.LayoutParams layout1 = ((Activity) mContext).getWindow().getAttributes();
@@ -63,7 +63,7 @@ public class CircularSeekBar {
                         } else if (Type == "Volume") {
                             currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
                             setLastAngle(((float) currentVolume / (float) maxVolume) * 360);
-                            value = (int) (((float) currentVolume / (float) maxVolume) * 360 / 3f);
+                            valueCounter = (int) (((float) currentVolume / (float) maxVolume) * 360 / 3f);
                             audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) currentVolume, 0);
 
                         }
@@ -71,22 +71,22 @@ public class CircularSeekBar {
 
                     @Override
                     protected void onRotate(int offset) {
-                        value += offset;
-                        if (value <= 100 && value >= 0) {
-                            percent = value;
-                            textView.setText(String.valueOf(value) + "%");
+                        valueCounter += offset;
+                        if (valueCounter <= 100 && valueCounter >= 0) {
+                            percent = valueCounter;
+                            textView.setText(String.valueOf(valueCounter) + "%");
                             if (Type == "Brightness") {
                                 WindowManager.LayoutParams layout = ((Activity) mContext).getWindow().getAttributes();
-                                layout.screenBrightness = (float) ((double) value / (double) 100);
+                                layout.screenBrightness = (float) ((double) valueCounter / (double) 100);
                                 ((Activity) mContext).getWindow().setAttributes(layout);
                             } else if (Type == "Volume") {
-                                audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (((double) value / (double) 100) * 15), 0);
+                                audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (((double) valueCounter / (double) 100) * 15), 0);
                             }
                         }
-                        if (value > 100)
-                            value = 100;
-                        if (value < 0)
-                            value = 0;
+                        if (valueCounter > 100)
+                            valueCounter = 100;
+                        if (valueCounter < 0)
+                            valueCounter = 0;
                     }
                 }, new LayoutParams(0, 0) {
                     {
@@ -98,8 +98,8 @@ public class CircularSeekBar {
                 addView(textView = new TextView(getContext()) {
                     {
 
-                        setText(Integer.toString(value) + "%");
-                        setTextColor(Color.BLACK);
+                        setText(Integer.toString(valueCounter) + "%");
+                        setTextColor(Color.WHITE);
                         setTextSize(30);
                     }
                 }, new LayoutParams(0, 0) {
@@ -111,21 +111,21 @@ public class CircularSeekBar {
                 });
             }
         };
-        rl.setVisibility(View.INVISIBLE);
-        layout.addView(rl, params);
+        relativeLayout.setVisibility(View.INVISIBLE);
+        layout.addView(relativeLayout, params);
     }
 
     public void show() {
-        rl.setVisibility(View.VISIBLE);
+        relativeLayout.setVisibility(View.VISIBLE);
     }
 
     public void hide() {
-        Log.e("hide", "hide");
-        rl.setVisibility(View.INVISIBLE);
+        
+        relativeLayout.setVisibility(View.INVISIBLE);
     }
 
     public boolean isVisibile() {
-        if (rl.getVisibility() == View.VISIBLE)
+        if (relativeLayout.getVisibility() == View.VISIBLE)
             return true;
         else
             return false;
@@ -135,7 +135,7 @@ public class CircularSeekBar {
         Type = type;
         audio = (AudioManager) (mContext).getSystemService(Context.AUDIO_SERVICE);
         maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        value = (int) ((android.provider.Settings.System.getFloat((mContext).getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
+        valueCounter = (int) ((android.provider.Settings.System.getFloat((mContext).getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
 
     }
 }

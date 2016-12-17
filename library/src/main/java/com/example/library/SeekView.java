@@ -38,7 +38,7 @@ public class SeekView {
         rl.addView(v);
         layout.addView(rl, params);
         v.requestLayout();
-        v.setVisibility(View.VISIBLE);
+        v.setVisibility(View.INVISIBLE);
     }
     public void show()
     {
@@ -52,5 +52,12 @@ public class SeekView {
     public void setText(String s)
     {
         tv.setText(s);
+    }
+    public boolean isVisible()
+    {
+        if(v.getVisibility()==View.VISIBLE)
+            return true;
+        else
+            return false;
     }
 }

@@ -84,7 +84,7 @@ public abstract class DialView extends View {
                       handler.postDelayed(delay=new Runnable() {
                             @Override
                             public void run() {
-                                CircularSeekBar.rl.setVisibility(View.INVISIBLE);
+                                CircularSeekBar.relativeLayout.setVisibility(View.INVISIBLE);
                             }
                         }, 2000);
                         break;
@@ -111,6 +111,10 @@ public abstract class DialView extends View {
         radius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2f;
         Paint p3 = new Paint();
         p3.setColor(0xffcccccc);
+        Paint p5=new Paint();
+        p5.setColor(0x00000000);
+        p5.setAlpha(100);
+        canvas.drawCircle(centerX, centerY, (minCircle) * radius,p5);
         drawArcSegment(can, centerX, centerY, (minCircle) * radius, (maxCircle) * radius, 0, 360, p3, p3);
         Paint p = new Paint();
         p.setColor(Color.parseColor("#FB5B0A"));

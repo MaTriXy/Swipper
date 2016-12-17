@@ -54,7 +54,13 @@ public class CustomView {
 
     public void hide() {
         v.setVisibility(View.INVISIBLE);
-
+    }
+    public boolean isVisible()
+    {
+        if(v.getVisibility()==View.VISIBLE)
+            return true;
+        else
+            return false;
     }
     public void setTitle(String s)
     {
