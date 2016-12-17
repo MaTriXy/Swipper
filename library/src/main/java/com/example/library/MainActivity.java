@@ -22,7 +22,8 @@ public class MainActivity extends Activity {
     private CustomView cv;
     private CircularSeekBar csk;
     private SeekView sv;
-    private VideoView video;
+    private VideoView videoView;
+    private MediaPlayer mediaPlayer;
     private int maxVolume;
     private int currentVolume;
     private int numberOfTaps = 0;
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        video = vv;
+        videoView = vv;
     }
 
     @Override
@@ -69,11 +70,35 @@ public class MainActivity extends Activity {
             case MotionEvent.ACTION_MOVE: {
                 final float x = ev.getX();
                 final float y = ev.getY();
-             /*   final float X = ev.getHistoricalX(0, 0);
-                final float Y = ev.getHistoricalY(0, 0);*/
                 d = getDistance(x, y, ev);
                 try {
-                    seek(video, ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
+                    Seek(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
+
+                    if(onVertical=="Brightness")
+                        Brightness(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
+                    else
+                        if(onVertical=="Volume")
+                            Volume(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
+                    else
+                         if(onVertical=="Seek")
+                         {
+                             Seek(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
+                         }
+
+
+                    if(onHorizontal=="Brightness")
+                        Brightness(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"X");
+                    else
+                    if(onHorizontal=="Volume")
+                        Volume(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"X");
+                    else
+                    if(onHorizontal=="Seek")
+                    {
+                        Seek(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"X");
+                    }
+
+
+
 //                   Volume(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
 
                     /*if (x == ev.getHistoricalX(0, 0)) {
@@ -183,8 +208,7 @@ public class MainActivity extends Activity {
                     break;
                 }
 
-                if (numberOfTaps > 0
-                        && (System.currentTimeMillis() - lastTapTimeMs) < ViewConfiguration.getDoubleTapTimeout()) {
+                if (numberOfTaps > 0 && (System.currentTimeMillis() - lastTapTimeMs) < ViewConfiguration.getDoubleTapTimeout()) {
                     numberOfTaps += 1;
                 } else {
                     numberOfTaps = 1;
@@ -192,14 +216,14 @@ public class MainActivity extends Activity {
 
                 lastTapTimeMs = System.currentTimeMillis();
                 if (numberOfTaps == 2) {
-                    String type = "Brightness";
-                    if (type == "Brightness") {
+                    onCircular = "Brightness";
+                    if (onCircular == "Brightness") {
                         csk.setType("Brightness");
                         if (csk.isVisibile())
                             csk.hide();
                         else
                             csk.show();
-                    } else if (type == "Volume") {
+                    } else if (onCircular == "Volume") {
                         csk.setType("Volume");
                         if (csk.isVisibile())
                             csk.hide();
@@ -301,50 +325,89 @@ public class MainActivity extends Activity {
 
     }
 
-    public void seek(VideoView mp, float X, float Y, float x, float y, float d, String type) {
+    public void Seek(float X, float Y, float x, float y, float d, String type) {
 
         if (type == "Y" && x == X) {
             d = d / 300;
             if (y < Y) {
-                seekCommon(mp, d);
+                seekCommon(d);
             } else {
-                seekCommon(mp, -d);
+                seekCommon(-d);
             }
         } else if (type == "X" && y == Y) {
             d = d / 200;
             if (x > X) {
-                seekCommon(mp, d);
+                seekCommon(d);
             } else {
-                seekCommon(mp, -d);
+                seekCommon(-d);
             }
-        } else if (type == "circular") {
-
         }
     }
 
-    public void seekCommon(VideoView mp, float d) {
-        if (mp != null) {
+    public void seekCommon(float d) {
+        if (mediaPlayer!= null) {
             seekdistance += d * 60000;
 //            Log.e("current",mp.getCurrentPosition()+"");
             sv.show();
-            Log.e("after", mp.getCurrentPosition() + (int) (d * 60000) + "");
-            Log.e("seek distance", (int) (seekdistance) + "");
-            if (mp.getCurrentPosition() + (int) (d * 60000) > 0 && mp.getCurrentPosition() + (int) (d * 60000) < mp.getDuration()) {
-                mp.seekTo(mp.getCurrentPosition() + (int) (d * 60000));
+            if(mediaPlayer!=null) {
+                Log.e("after", mediaPlayer.getCurrentPosition() + (int) (d * 60000) + "");
+                Log.e("seek distance", (int) (seekdistance) + "");
+                if (mediaPlayer.getCurrentPosition() + (int) (d * 60000) > 0 && mediaPlayer.getCurrentPosition() + (int) (d * 60000) < mediaPlayer.getDuration()) {
+                    mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + (int) (d * 60000));
 //                Log.e("afterincrement",mp.getCurrentPosition()+"");
-                sv.setText((int) (seekdistance / 60000) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2));
-            }
+                    sv.setText((int) (seekdistance / 60000) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2));
+                }
+            }else
+                if(videoView!=null)
+                {
+                    Log.e("after",videoView.getCurrentPosition() + (int) (d * 60000) + "");
+                    Log.e("seek distance", (int) (seekdistance) + "");
+                    if (videoView.getCurrentPosition() + (int) (d * 60000) > 0 && videoView.getCurrentPosition() + (int) (d * 60000) < videoView.getDuration()) {
+                        videoView.seekTo(videoView.getCurrentPosition() + (int) (d * 60000));
+//                Log.e("afterincrement",mp.getCurrentPosition()+"");
+                        sv.setText((int) (seekdistance / 60000) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2));
+                    }
+                }
         }
     }
 
-    public void seek1(String type,VideoView v)
-    {
+    public void Seek1(String type, VideoView v) {
 
-        if(type==vertical)
-        {
-            
-        }
+        if (type == "vertical")
+            onVertical = "Seek";
+        else if (type == "hoizontal")
+            onHorizontal = "Seek";
+        videoView=v;
     }
+    public void Seek1(String type, MediaPlayer v) {
+
+        if (type == "vertical")
+            onVertical = "Seek";
+        else if (type == "hoizontal")
+            onHorizontal = "Seek";
+        mediaPlayer=v;
+    }
+
+    public void Brightness1(String type) {
+
+        if (type == "vertical")
+            onVertical = "Brightness";
+        else if (type == "hoizontal")
+            onHorizontal = "Brightness";
+        else if (type == "circular")
+            onCircular = "Brightness";
+    }
+
+    public void Volume1(String type) {
+
+        if (type == "vertical")
+            onVertical = "Volume";
+        else if (type == "hoizontal")
+            onHorizontal = "Volume";
+        else if (type == "circular")
+             onCircular = "Volume";
+    }
+
 
     float getDistance(float startX, float startY, MotionEvent ev) {
         float distanceSum = 0;
