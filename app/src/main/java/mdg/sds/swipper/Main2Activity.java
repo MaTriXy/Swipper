@@ -20,5 +20,8 @@ public class Main2Activity extends MainActivity {
         vv.setVideoURI(video1);
         vv.start();
         set(this,vv);
+//        Volume1("circular");
+        Brightness1("circular");
+        Seek1("horizontal",vv);
     }
 }

@@ -16,46 +16,46 @@ import android.widget.TextView;
 
 public class SeekView {
 
-    Context mContext;
-    View v;
-    private TextView tv;
+    private Context mContext;
+    private View view;
+    private TextView textView;
     private TextView title;
 
     public SeekView(Context context) {
         mContext = context;
         ViewGroup layout = (ViewGroup) ((Activity) context).findViewById(android.R.id.content).getRootView();
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.custom_seekview, null);
+        view = inflater.inflate(R.layout.custom_seekview, null);
 //        v.setScaleY(1.5f);
 //        v.setScaleX(1.5f);
-        v.getBackground().setAlpha(100);
-        tv=(TextView)v.findViewById(R.id.textView3);
+        view.getBackground().setAlpha(100);
+        textView=(TextView)view.findViewById(R.id.textView3);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         params.leftMargin = 100;
         params.bottomMargin = 10;
-        RelativeLayout rl = new RelativeLayout(context);
-        rl.setGravity(Gravity.CENTER);
-        rl.addView(v);
-        layout.addView(rl, params);
-        v.requestLayout();
-        v.setVisibility(View.INVISIBLE);
+        RelativeLayout relativeLayout = new RelativeLayout(context);
+        relativeLayout.setGravity(Gravity.CENTER);
+        relativeLayout.addView(view);
+        layout.addView(relativeLayout, params);
+        view.requestLayout();
+        view.setVisibility(View.INVISIBLE);
     }
     public void show()
     {
-        v.setVisibility(View.VISIBLE);
+        view.setVisibility(View.VISIBLE);
     }
     public void hide()
     {
-        v.setVisibility(View.INVISIBLE);
+        view.setVisibility(View.INVISIBLE);
 
     }
     public void setText(String s)
     {
-        tv.setText(s);
+        textView.setText(s);
     }
     public boolean isVisible()
     {
-        if(v.getVisibility()==View.VISIBLE)
+        if(view.getVisibility()==View.VISIBLE)
             return true;
         else
             return false;

@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
                 final float y = ev.getY();
                 d = getDistance(x, y, ev);
                 try {
-                    Seek(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
+//                    Seek(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
 
                     if(onVertical=="Brightness")
                         Brightness(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
@@ -216,7 +216,6 @@ public class MainActivity extends Activity {
 
                 lastTapTimeMs = System.currentTimeMillis();
                 if (numberOfTaps == 2) {
-                    onCircular = "Brightness";
                     if (onCircular == "Brightness") {
                         csk.setType("Brightness");
                         if (csk.isVisibile())
@@ -322,7 +321,6 @@ public class MainActivity extends Activity {
             getWindow().setAttributes(layout);
             cv.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness + d) * 100)).toString() + "%");
         }
-
     }
 
     public void Seek(float X, float Y, float x, float y, float d, String type) {
@@ -345,7 +343,6 @@ public class MainActivity extends Activity {
     }
 
     public void seekCommon(float d) {
-        if (mediaPlayer!= null) {
             seekdistance += d * 60000;
 //            Log.e("current",mp.getCurrentPosition()+"");
             sv.show();
@@ -368,14 +365,13 @@ public class MainActivity extends Activity {
                         sv.setText((int) (seekdistance / 60000) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2));
                     }
                 }
-        }
     }
 
     public void Seek1(String type, VideoView v) {
 
         if (type == "vertical")
             onVertical = "Seek";
-        else if (type == "hoizontal")
+        else if (type == "horizontal")
             onHorizontal = "Seek";
         videoView=v;
     }
@@ -392,7 +388,7 @@ public class MainActivity extends Activity {
 
         if (type == "vertical")
             onVertical = "Brightness";
-        else if (type == "hoizontal")
+        else if (type == "horizontal")
             onHorizontal = "Brightness";
         else if (type == "circular")
             onCircular = "Brightness";
@@ -402,7 +398,7 @@ public class MainActivity extends Activity {
 
         if (type == "vertical")
             onVertical = "Volume";
-        else if (type == "hoizontal")
+        else if (type == "horizontal")
             onHorizontal = "Volume";
         else if (type == "circular")
              onCircular = "Volume";
