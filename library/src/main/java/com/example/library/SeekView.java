@@ -26,8 +26,6 @@ public class SeekView {
         ViewGroup layout = (ViewGroup) ((Activity) context).findViewById(android.R.id.content).getRootView();
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.custom_seekview, null);
-//        v.setScaleY(1.5f);
-//        v.setScaleX(1.5f);
         view.getBackground().setAlpha(100);
         textView=(TextView)view.findViewById(R.id.textView3);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);

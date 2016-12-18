@@ -16,12 +16,12 @@ public class CircularSeekBar {
 
     final Context mContext;
     private int percent;
-    private float brightness;
-    private String Type;
     private int currentVolume;
     private int maxVolume;
-    private AudioManager audio;
     private int valueCounter;
+    private float brightness;
+    private String Type;
+    private AudioManager audio;
     public static RelativeLayout relativeLayout;
 
     public CircularSeekBar(Context context) {

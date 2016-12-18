@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
     private int mActivePointerId = INVALID_POINTER_ID;
     private EditText et;
     private AudioManager audio;
-    private CustomView cv;
+    private CustomView customView;
     private CircularSeekBar csk;
     private SeekView sv;
     private VideoView videoView;
@@ -32,22 +32,24 @@ public class MainActivity extends Activity {
     private double volper;
     private double per;
     private float brightness;
-    private float d;
     private float seekdistance = 0;
-    private float volumeSum = 0;
+    private float d = 0;
     private String onHorizontal;
     private String onVertical;
     private String onCircular;
+    private boolean checkBrightness=true;
+    private boolean checkVolume=true;
+    private boolean checkSeek=true;
 
     public void set(Context context, VideoView vv) {
-        cv = new CustomView(context);
+        customView = new CustomView(context);
         sv = new SeekView(context);
         brightness = android.provider.Settings.System.getFloat(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = brightness / 255;
         getWindow().setAttributes(layout);
-        cv.setProgress((int) ((brightness / 255) * 100));
-        cv.setProgressText(Integer.valueOf((int) ((brightness / 255) * 100)).toString() + "%");
+        customView.setProgress((int) ((brightness / 255) * 100));
+        customView.setProgressText(Integer.valueOf((int) ((brightness / 255) * 100)).toString() + "%");
         csk = new CircularSeekBar(context);
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -62,7 +64,7 @@ public class MainActivity extends Activity {
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 seekdistance = 0;
-                volumeSum = 0;
+                d = 0;
                 touchDownMs = System.currentTimeMillis();
                 break;
             }
@@ -72,121 +74,24 @@ public class MainActivity extends Activity {
                 final float y = ev.getY();
                 d = getDistance(x, y, ev);
                 try {
-//                    Seek(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
-
-                    if(onVertical=="Brightness")
-                        Brightness(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
-                    else
-                        if(onVertical=="Volume")
-                            Volume(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
-                    else
-                         if(onVertical=="Seek")
-                         {
-                             Seek(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
-                         }
-
-
-                    if(onHorizontal=="Brightness")
-                        Brightness(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"X");
-                    else
-                    if(onHorizontal=="Volume")
-                        Volume(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"X");
-                    else
-                    if(onHorizontal=="Seek")
-                    {
-                        Seek(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"X");
+                    if (onVertical == "Brightness" && checkBrightness==true)
+                        changeBrightness(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "Y");
+                    else if (onVertical == "Volume" && checkVolume==true)
+                        changeVolume(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "Y");
+                    else if (onVertical == "Seek" && checkSeek==true) {
+                        changeSeek(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "Y");
                     }
-
-
-
-//                   Volume(ev.getHistoricalX(0, 0),ev.getHistoricalY(0, 0),x,y,d,"Y");
-
-                    /*if (x == ev.getHistoricalX(0, 0)) {
-                        d = (getDistance(x, y, ev) / 270);
-                        cv.setTitle("Brightness");
-                        if (y < ev.getHistoricalY(0, 0)) {
-                            WindowManager.LayoutParams layout = getWindow().getAttributes();
-                            if (getWindow().getAttributes().screenBrightness + (float) (getDistance(x, y, ev) / 270) <= 1 && getWindow().getAttributes().screenBrightness + (float) (getDistance(x, y, ev) / 270) >= 0) {
-                                cv.show();
-                                cv.setProgress((int) ((getWindow().getAttributes().screenBrightness + (float) (getDistance(x, y, ev) / 270)) * 100));
-                                layout.screenBrightness = getWindow().getAttributes().screenBrightness + (float) (getDistance(x, y, ev) / 270);
-                                getWindow().setAttributes(layout);
-                                cv.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness + (float) (getDistance(x, y, ev) / 270)) * 100)).toString() + "%");
-
-                            } else {
-                                cv.show();
-                                cv.setProgress(100);
-                                layout.screenBrightness = 1;
-                                getWindow().setAttributes(layout);
-                                cv.setProgressText("100" + "%");
-
-                            }
-                        } else {
-                            Log.e("p", "in else");
-                            WindowManager.LayoutParams layout = getWindow().getAttributes();
-                            if (getWindow().getAttributes().screenBrightness - (float) (getDistance(x, y, ev) / 270) >= 0 && getWindow().getAttributes().screenBrightness - (float) (getDistance(x, y, ev) / 270) <= 1) {
-                                cv.show();
-                                cv.setProgress((int) ((getWindow().getAttributes().screenBrightness - (float) (getDistance(x, y, ev) / 270)) * 100));
-                                layout.screenBrightness = getWindow().getAttributes().screenBrightness - (float) (getDistance(x, y, ev) / 270);
-                                getWindow().setAttributes(layout);
-                                cv.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness - (float) (getDistance(x, y, ev) / 270)) * 100)).toString() + "%");
-                            } else {
-                                cv.show();
-                                cv.setProgress(0);
-                                layout.screenBrightness = 0;
-                                getWindow().setAttributes(layout);
-                                cv.setProgressText("0" + "%");
-                            }
-                        }
-                    }*/
+                    if (onHorizontal == "Brightness" && checkBrightness==true)
+                        changeBrightness(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
+                    else if (onHorizontal == "Volume" && checkVolume==true)
+                        changeVolume(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
+                    else if (onHorizontal == "Seek" && checkSeek==true) {
+                        changeSeek(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
+                    }
                 } catch (IllegalArgumentException e) {
 
                 }
-                try {
-//                    Volume(ev.getHistoricalX(0, 0), ev.getHistoricalY(0, 0), x, y, d, "X");
-                  /*  if (y == ev.getHistoricalY(0, 0)) {
-                        cv.setTitle("  Volume     ");
-                        if (x > ev.getHistoricalX(0, 0)) {
-                            Log.e("in if", "in if");
-                            currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-                            Log.e("current volume", currentVolume + "");
-                            per = (double) currentVolume / (double) maxVolume;
-                            try {
-                                if (per + ((double) getDistance(x, y, ev) / (double) 160) < 1) {
-                                    Log.e("((double)getDistance", ((double) getDistance(x, y, ev) / (double) 160) + "");
-                                    cv.show();
-                                    cv.setProgress((int) ((per + ((double) getDistance(x, y, ev) / (double) 160)) * 100));
-                                    cv.setProgressText((int) ((per + ((double) getDistance(x, y, ev) / (double) 160)) * 100) + "%");
-                                    volper = (per + ((double) getDistance(x, y, ev) / (double) 160));
-                                    Log.e("volper", volper + "");
-                                    audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (volper * 15), 0);
-                                    Log.e("pulkit", (int) (volper * maxVolume) + " ");
-                                } else {
-                                    audio.setStreamVolume(AudioManager.STREAM_MUSIC, (maxVolume), 0);
-                                    cv.setProgressText("100" + "%");
-                                }
-                            } catch (SecurityException e) {
-                            }
-                        } else {
-                            Log.e("in else", "inelse");
-                            currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-                            Log.e("current volume", currentVolume + "");
-                            per = (double) currentVolume / maxVolume;
-                            if (per - (float) (getDistance(x, y, ev) / 160) > 0) {
-                                cv.show();
-                                cv.setProgress((int) ((per - ((double) getDistance(x, y, ev) / (double) 160)) * 100));
-                                cv.setProgressText((int) ((per - ((double) getDistance(x, y, ev) / (double) 160)) * 100) + "%");
-                                volper = (per - ((double) getDistance(x, y, ev) / (double) 160));
-                                audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (volper * maxVolume), 0);
-                            } else {
-                                audio.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-                                cv.setProgressText("0" + "%");
-                            }
-                        }
-                    }*/
-                } catch (IllegalArgumentException e) {
 
-                }
                 break;
             }
 
@@ -195,8 +100,8 @@ public class MainActivity extends Activity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (cv.isVisible())
-                            cv.hide();
+                        if (customView.isVisible())
+                            customView.hide();
                         if (sv.isVisible())
                             sv.hide();
                     }
@@ -230,17 +135,13 @@ public class MainActivity extends Activity {
                             csk.show();
                     }
                 }
-
-
                 mActivePointerId = INVALID_POINTER_ID;
                 break;
             }
-
             case MotionEvent.ACTION_CANCEL: {
                 mActivePointerId = INVALID_POINTER_ID;
                 break;
             }
-
             case MotionEvent.ACTION_POINTER_UP: {
 
                 final int pointerIndex = MotionEventCompat.getActionIndex(ev);
@@ -256,43 +157,69 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    public void Volume(float X, float Y, float x, float y, float d, String type) {
-        cv.setTitle(" Volume  ");
+    public void disableBrightness()
+    {
+        checkBrightness=false;
+    }
+    public void disableSeek()
+    {
+        checkSeek=false;
+    }
+    public void disableVolume()
+    {
+        checkVolume=false;
+    }
+
+    public void enableBrightness()
+    {
+        checkBrightness=true;
+    }
+    public void enableSeek()
+    {
+        checkSeek=true;
+    }
+    public void enableVolume()
+    {
+        checkVolume=true;
+    }
+
+    public void changeVolume(float X, float Y, float x, float y, float d, String type) {
+        customView.setTitle(" Volume  ");
         if (type == "Y" && x == X) {
-            d = d / 200;
             if (y < Y) {
+                d = d / 100;
                 commonVolume(d);
             } else {
+                d = d / 150;
                 commonVolume(-d);
             }
         } else if (type == "X" && y == Y) {
             Log.e("pul", "in if");
-            d = d / 100;
             if (x > X) {
+                d = d / 150;
                 commonVolume(d);
             } else {
+                d = d / 150;
                 commonVolume(-d);
             }
         }
-
     }
-
     public void commonVolume(float d) {
         currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         per = (double) currentVolume / (double) maxVolume;
         Log.e("per", per + "");
-        volumeSum += d;
-        if (per + volumeSum <= 1 && per + volumeSum >= 0) {
-            cv.show();
-            cv.setProgress((int) ((per + volumeSum) * 100));
-            cv.setProgressText((int) ((per + volumeSum) * 100) + "%");
-            volper = (per + (double) volumeSum);
-            audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (volper * 15), 0);
+        if (per + d <= 1 && per + d >= 0) {
+            customView.show();
+            if(d>0.05||d<-0.05) {
+                customView.setProgress((int) ((per + d) * 100));
+                customView.setProgressText((int) ((per + d) * 100) + "%");
+                volper = (per + (double) d);
+                audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (volper * 15), 0);
+            }
         }
     }
-
-    public void Brightness(float X, float Y, float x, float y, float d, String type) {
-        cv.setTitle("Brightness");
+    public void changeBrightness(float X, float Y, float x, float y, float d, String type) {
+        customView.setTitle("Brightness");
         if (type == "Y" && x == X) {
             d = d / 270;
             if (y < Y) {
@@ -307,23 +234,27 @@ public class MainActivity extends Activity {
             } else {
                 commonBrightness(-d);
             }
-        } else if (type == "circular") {
-
         }
     }
 
     public void commonBrightness(float d) {
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (getWindow().getAttributes().screenBrightness + d <= 1 && getWindow().getAttributes().screenBrightness + d >= 0) {
-            cv.show();
-            cv.setProgress((int) ((getWindow().getAttributes().screenBrightness + d) * 100));
+            customView.show();
+            if((int) ((getWindow().getAttributes().screenBrightness + d) * 100)>100)
+                customView.setProgress(100);
+            else
+            if((int) ((getWindow().getAttributes().screenBrightness + d) * 100)<0)
+                customView.setProgress(0);
+            else
+                customView.setProgress((int) ((getWindow().getAttributes().screenBrightness + d) * 100));
             layout.screenBrightness = getWindow().getAttributes().screenBrightness + d;
             getWindow().setAttributes(layout);
-            cv.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness + d) * 100)).toString() + "%");
+            customView.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness + d) * 100)).toString() + "%");
         }
     }
 
-    public void Seek(float X, float Y, float x, float y, float d, String type) {
+    public void changeSeek(float X, float Y, float x, float y, float d, String type) {
 
         if (type == "Y" && x == X) {
             d = d / 300;
@@ -343,48 +274,49 @@ public class MainActivity extends Activity {
     }
 
     public void seekCommon(float d) {
-            seekdistance += d * 60000;
-//            Log.e("current",mp.getCurrentPosition()+"");
-            sv.show();
-            if(mediaPlayer!=null) {
-                Log.e("after", mediaPlayer.getCurrentPosition() + (int) (d * 60000) + "");
-                Log.e("seek distance", (int) (seekdistance) + "");
-                if (mediaPlayer.getCurrentPosition() + (int) (d * 60000) > 0 && mediaPlayer.getCurrentPosition() + (int) (d * 60000) < mediaPlayer.getDuration()) {
-                    mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + (int) (d * 60000));
-//                Log.e("afterincrement",mp.getCurrentPosition()+"");
-                    sv.setText((int) (seekdistance / 60000) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2));
-                }
-            }else
-                if(videoView!=null)
-                {
-                    Log.e("after",videoView.getCurrentPosition() + (int) (d * 60000) + "");
-                    Log.e("seek distance", (int) (seekdistance) + "");
-                    if (videoView.getCurrentPosition() + (int) (d * 60000) > 0 && videoView.getCurrentPosition() + (int) (d * 60000) < videoView.getDuration()) {
-                        videoView.seekTo(videoView.getCurrentPosition() + (int) (d * 60000));
-//                Log.e("afterincrement",mp.getCurrentPosition()+"");
-                        sv.setText((int) (seekdistance / 60000) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2));
-                    }
-                }
-    }
+        seekdistance += d * 60000;
+        sv.show();
+        if (mediaPlayer != null) {
+            Log.e("after", mediaPlayer.getCurrentPosition() + (int) (d * 60000) + "");
+            Log.e("seek distance", (int) (seekdistance) + "");
+            if (mediaPlayer.getCurrentPosition() + (int) (d * 60000) > 0 && mediaPlayer.getCurrentPosition() + (int) (d * 60000) < mediaPlayer.getDuration() + 10) {
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + (int) (d * 60000));
+                if (seekdistance > 0)
+                    sv.setText("+" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((mediaPlayer.getCurrentPosition() + (int) (d * 60000)) / 60000) + ":" + String.valueOf((int) ((mediaPlayer.getCurrentPosition() + (int) (d * 60000)) % 60000)).substring(0, 2) + ")");
+                else
+                    sv.setText("-" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((mediaPlayer.getCurrentPosition() + (int) (d * 60000)) / 60000) + ":" + String.valueOf((int) ((mediaPlayer.getCurrentPosition() + (int) (d * 60000)) % 60000)).substring(0, 2) + ")");
+            }
+        } else if (videoView != null) {
+            Log.e("after", videoView.getCurrentPosition() + (int) (d * 60000) + "");
+            Log.e("seek distance", (int) (seekdistance) + "");
+            if (videoView.getCurrentPosition() + (int) (d * 60000) > 0 && videoView.getCurrentPosition() + (int) (d * 60000) < videoView.getDuration() + 10) {
+                videoView.seekTo(videoView.getCurrentPosition() + (int) (d * 60000));
+                if (seekdistance > 0)
+                    sv.setText("+" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((videoView.getCurrentPosition() + (int) (d * 60000)) / 60000) + ":" + String.valueOf((int) ((videoView.getCurrentPosition() + (int) (d * 60000)) % 60000)).substring(0, 2) + ")");
+                else
+                    sv.setText("-" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((videoView.getCurrentPosition() + (int) (d * 60000)) / 60000) + ":" + String.valueOf((int) ((videoView.getCurrentPosition() + (int) (d * 60000)) % 60000)).substring(0, 2) + ")");
 
-    public void Seek1(String type, VideoView v) {
+            }
+        }
+    }
+    public void Seek(String type, VideoView v) {
 
         if (type == "vertical")
             onVertical = "Seek";
         else if (type == "horizontal")
             onHorizontal = "Seek";
-        videoView=v;
+        videoView = v;
     }
-    public void Seek1(String type, MediaPlayer v) {
+    public void Seek(String type, MediaPlayer v) {
 
         if (type == "vertical")
             onVertical = "Seek";
         else if (type == "hoizontal")
             onHorizontal = "Seek";
-        mediaPlayer=v;
+        mediaPlayer = v;
     }
 
-    public void Brightness1(String type) {
+    public void Brightness(String type) {
 
         if (type == "vertical")
             onVertical = "Brightness";
@@ -394,14 +326,14 @@ public class MainActivity extends Activity {
             onCircular = "Brightness";
     }
 
-    public void Volume1(String type) {
+    public void Volume(String type) {
 
         if (type == "vertical")
             onVertical = "Volume";
         else if (type == "horizontal")
             onHorizontal = "Volume";
         else if (type == "circular")
-             onCircular = "Volume";
+            onCircular = "Volume";
     }
 
 

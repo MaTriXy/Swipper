@@ -29,7 +29,6 @@ public abstract class DialView extends View {
     private float lastAngle = 0;
     private int offsetSum = 0;
     private Runnable delay;
-    public Paint paint2;
     public Canvas can;
     Handler handler;
     private static final float CIRCLE_LIMIT = 359.9999f;
@@ -40,7 +39,6 @@ public abstract class DialView extends View {
     public DialView(Context context) {
         super(context);
         stepAngle = 1;
-        paint2 = new Paint();
         handler = new Handler();
         setOnTouchListener(new OnTouchListener() {
             private boolean isDragging;
@@ -64,8 +62,7 @@ public abstract class DialView extends View {
                                 modifiedtouchAngle=touchAngle;
                             else
                                 modifiedtouchAngle=360+touchAngle;
-                            Log.e("touchangle", touchAngle + "");
-                            if(modifiedtouchAngle>=lastAngle-20&&modifiedtouchAngle<=lastAngle+20) {
+                            if(modifiedtouchAngle>=lastAngle-10&&modifiedtouchAngle<=lastAngle+10) {
                                 deltaAngle = (360 + touchAngle - startAngle + 180) % 360 - 180;
                                 Log.e("delta angle", deltaAngle + "");
                                 if (Math.abs(deltaAngle) > stepAngle) {
@@ -109,17 +106,17 @@ public abstract class DialView extends View {
     protected void onDraw(Canvas canvas) {
         can = canvas;
         radius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2f;
-        Paint p3 = new Paint();
-        p3.setColor(0xffcccccc);
-        Paint p5=new Paint();
+        Paint paintGrey = new Paint();
+        paintGrey.setColor(0xffcccccc);
+     /*   Paint p5=new Paint();
         p5.setColor(0x00000000);
         p5.setAlpha(100);
-        canvas.drawCircle(centerX, centerY, (minCircle) * radius,p5);
-        drawArcSegment(can, centerX, centerY, (minCircle) * radius, (maxCircle) * radius, 0, 360, p3, p3);
-        Paint p = new Paint();
-        p.setColor(Color.parseColor("#FB5B0A"));
+        canvas.drawCircle(centerX, centerY, (minCircle) * radius,p5);*/
+        drawArcSegment(can, centerX, centerY, (minCircle) * radius, (maxCircle) * radius, 0, 360, paintGrey, paintGrey);
+        Paint progressPaint = new Paint();
+        progressPaint.setColor(Color.parseColor("#FB5B0A"));
         if(offsetSum>=0)
-        drawArcSegment(can, centerX, centerY, (minCircle) * radius, (maxCircle) * radius, -90,offsetSum*3.6f, p, p);
+        drawArcSegment(can, centerX, centerY, (minCircle) * radius, (maxCircle) * radius, -90,offsetSum*3.6f, progressPaint, progressPaint);
         super.onDraw(canvas);
 
     }
@@ -140,8 +137,8 @@ public abstract class DialView extends View {
         float dY2 = (float) Math.pow(centerY - touchY, 2);
         float distToCenter = (float) Math.sqrt(dX2 + dY2);
         float baseDist = Math.min(centerX, centerY);
-        float minDistToCenter = minCircle * baseDist-0.2f;
-        float maxDistToCenter = maxCircle * baseDist+0.2f;
+        float minDistToCenter = minCircle * baseDist;
+        float maxDistToCenter = maxCircle * baseDist;
         return distToCenter >= minDistToCenter && distToCenter <= maxDistToCenter;
     }
 
