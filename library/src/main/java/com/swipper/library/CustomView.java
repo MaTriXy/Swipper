@@ -42,7 +42,7 @@ public class CustomView {
         params.leftMargin = 100;
         params.bottomMargin = 10;
         RelativeLayout relativeLayout = new RelativeLayout(context);
-       relativeLayout.setGravity(Gravity.CENTER);
+        relativeLayout.setGravity(Gravity.CENTER);
         relativeLayout.addView(view);
         layout.addView(relativeLayout, params);
         view.requestLayout();

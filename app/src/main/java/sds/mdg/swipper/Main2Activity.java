@@ -1,12 +1,12 @@
-package mdg.sds.swipper;
+package sds.mdg.swipper;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.VideoView;
 
-import com.swipper.library.ViewManager;
+import com.swipper.library.Swipper;
 
-public class Main2Activity extends ViewManager {
+public class Main2Activity extends Swipper {
 
     VideoView videoView;
 
@@ -18,9 +18,9 @@ public class Main2Activity extends ViewManager {
         Uri video1 = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video);
         videoView.setVideoURI(video1);
         videoView.start();
-        set(this, videoView);
-        Brightness("vertical");
-        Volume("circular");
-        Seek("horizontal", videoView);
+        set(this);
+        Brightness(Orientation.VERTICAL);
+        Volume(Orientation.CIRCULAR);
+        Seek(Orientation.HORIZONTAL, videoView);
     }
 }

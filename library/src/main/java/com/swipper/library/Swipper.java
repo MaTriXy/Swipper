@@ -15,7 +15,7 @@ import android.widget.VideoView;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
-public class ViewManager extends Activity {
+public class Swipper extends Activity {
     private int mActivePointerId = INVALID_POINTER_ID;
     private AudioManager audio;
     private CustomView customView;
@@ -41,7 +41,13 @@ public class ViewManager extends Activity {
     private String onCircular;
     public static String color = "#FB5B0A";
 
-    public void set(Context context, VideoView vv) {
+
+    public enum Orientation
+    {
+        HORIZONTAL,VERTICAL,CIRCULAR
+    }
+
+    public void set(Context context) {
         customView = new CustomView(context);
         seekView = new SeekView(context);
         brightness = android.provider.Settings.System.getFloat(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
@@ -54,7 +60,6 @@ public class ViewManager extends Activity {
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        videoView = vv;
     }
 
     public static void setColor(String s) {
@@ -187,7 +192,7 @@ public class ViewManager extends Activity {
     }
 
     public void changeVolume(float X, float Y, float x, float y, float distance, String type) {
-        customView.setTitle(" Volume  ");
+        customView.setTitle("  Volume  ");
         seekView.hide();
         if (type == "Y" && x == X) {
             if (y < Y) {
@@ -227,14 +232,14 @@ public class ViewManager extends Activity {
         customView.setTitle("Brightness");
         seekView.hide();
         if (type == "Y" && x == X) {
-            distance =distance / 270;
+            distance = distance / 270;
             if (y < Y) {
                 commonBrightness(distance);
             } else {
                 commonBrightness(-distance);
             }
         } else if (type == "X" && y == Y) {
-            distance= distance/ 160;
+            distance = distance / 160;
             if (x > X) {
                 commonBrightness(distance);
             } else {
@@ -245,7 +250,7 @@ public class ViewManager extends Activity {
 
     public void commonBrightness(float distance) {
         WindowManager.LayoutParams layout = getWindow().getAttributes();
-        if (getWindow().getAttributes().screenBrightness +distance <= 1 && getWindow().getAttributes().screenBrightness + distance >= 0) {
+        if (getWindow().getAttributes().screenBrightness + distance <= 1 && getWindow().getAttributes().screenBrightness + distance >= 0) {
             customView.show();
             if ((int) ((getWindow().getAttributes().screenBrightness + distance) * 100) > 100) {
                 customView.setProgress(100);
@@ -258,7 +263,7 @@ public class ViewManager extends Activity {
                 customView.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness + distance) * 100)).toString() + "%");
             }
 
-            layout.screenBrightness = getWindow().getAttributes().screenBrightness +distance;
+            layout.screenBrightness = getWindow().getAttributes().screenBrightness + distance;
             getWindow().setAttributes(layout);
         }
     }
@@ -266,7 +271,7 @@ public class ViewManager extends Activity {
     public void changeSeek(float X, float Y, float x, float y, float distance, String type) {
 
         if (type == "Y" && x == X) {
-            distance =distance/ 300;
+            distance = distance / 300;
             if (y < Y) {
                 seekCommon(distance);
             } else {
@@ -291,7 +296,7 @@ public class ViewManager extends Activity {
             if (mediaPlayer.getCurrentPosition() + (int) (distance * 60000) > 0 && mediaPlayer.getCurrentPosition() + (int) (distance * 60000) < mediaPlayer.getDuration() + 10) {
                 mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + (int) (distance * 60000));
                 if (seekdistance > 0)
-                    seekView.setText("+" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((mediaPlayer.getCurrentPosition() + (int) (distance* 60000)) / 60000) + ":" + String.valueOf((int) ((mediaPlayer.getCurrentPosition() + (int) (distance * 60000)) % 60000)).substring(0, 2) + ")");
+                    seekView.setText("+" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((mediaPlayer.getCurrentPosition() + (int) (distance * 60000)) / 60000) + ":" + String.valueOf((int) ((mediaPlayer.getCurrentPosition() + (int) (distance * 60000)) % 60000)).substring(0, 2) + ")");
                 else
                     seekView.setText("-" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((mediaPlayer.getCurrentPosition() + (int) (distance * 60000)) / 60000) + ":" + String.valueOf((int) ((mediaPlayer.getCurrentPosition() + (int) (distance * 60000)) % 60000)).substring(0, 2) + ")");
             }
@@ -303,47 +308,47 @@ public class ViewManager extends Activity {
                 if (seekdistance > 0)
                     seekView.setText("+" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((videoView.getCurrentPosition() + (int) (distance * 60000)) / 60000) + ":" + String.valueOf((int) ((videoView.getCurrentPosition() + (int) (distance * 60000)) % 60000)).substring(0, 2) + ")");
                 else
-                    seekView.setText("-" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((videoView.getCurrentPosition() + (int) (distance* 60000)) / 60000) + ":" + String.valueOf((int) ((videoView.getCurrentPosition() + (int) (distance * 60000)) % 60000)).substring(0, 2) + ")");
+                    seekView.setText("-" + Math.abs((int) (seekdistance / 60000)) + ":" + String.valueOf(Math.abs((int) ((seekdistance) % 60000))).substring(0, 2) + "(" + (int) ((videoView.getCurrentPosition() + (int) (distance * 60000)) / 60000) + ":" + String.valueOf((int) ((videoView.getCurrentPosition() + (int) (distance * 60000)) % 60000)).substring(0, 2) + ")");
 
             }
         }
     }
 
-    public void Seek(String type, VideoView v) {
+    public void Seek(Orientation orientation, VideoView v) {
 
-        if (type == "vertical")
+        if (orientation.equals(Orientation.VERTICAL))
             onVertical = "Seek";
-        else if (type == "horizontal")
+        else if (orientation.equals(Orientation.HORIZONTAL))
             onHorizontal = "Seek";
         videoView = v;
     }
 
-    public void Seek(String type, MediaPlayer v) {
+    public void Seek(Orientation orientation, MediaPlayer v) {
 
-        if (type == "vertical")
+        if (orientation.equals(Orientation.VERTICAL))
             onVertical = "Seek";
-        else if (type == "hoizontal")
+        else if (orientation.equals(Orientation.HORIZONTAL))
             onHorizontal = "Seek";
         mediaPlayer = v;
     }
 
-    public void Brightness(String type) {
+    public void Brightness(Orientation orientation) {
 
-        if (type == "vertical")
+        if (orientation.equals(Orientation.VERTICAL))
             onVertical = "Brightness";
-        else if (type == "horizontal")
+        else if (orientation.equals(Orientation.HORIZONTAL))
             onHorizontal = "Brightness";
-        else if (type == "circular")
+        else if (orientation.equals(Orientation.CIRCULAR))
             onCircular = "Brightness";
     }
 
-    public void Volume(String type) {
+    public void Volume(Orientation orientation) {
 
-        if (type == "vertical")
+        if (orientation.equals(Orientation.VERTICAL))
             onVertical = "Volume";
-        else if (type == "horizontal")
+        else if (orientation.equals(Orientation.HORIZONTAL))
             onHorizontal = "Volume";
-        else if (type == "circular")
+        else if (orientation.equals(Orientation.CIRCULAR))
             onCircular = "Volume";
     }
 

@@ -1,4 +1,4 @@
-package mdg.sds.swipper;
+package sds.mdg.swipper;
 
 import org.junit.Test;
 

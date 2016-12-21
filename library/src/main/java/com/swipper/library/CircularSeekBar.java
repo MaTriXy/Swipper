@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -45,10 +46,9 @@ public class CircularSeekBar {
                 addView(new DialView(getContext()) {
                     {
                         setStepAngle(3f);
-                        setDiscArea(.30f, .43f);
+                        setDiscArea(.35f, .48f);
                         setLastAngle((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360);
                         valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
-                        Log.e("last Angle", (android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 + "");
                         brightness = android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
                         WindowManager.LayoutParams layout = ((Activity) mContext).getWindow().getAttributes();
                         layout.screenBrightness = brightness / 255;
@@ -56,7 +56,6 @@ public class CircularSeekBar {
                         if (Type == "Brightness") {
                             setLastAngle((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360);
                             valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
-                            Log.e("last Angle", (android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 + "");
                             brightness = android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
                             WindowManager.LayoutParams layout1 = ((Activity) mContext).getWindow().getAttributes();
                             layout1.screenBrightness = brightness / 255;
@@ -101,7 +100,7 @@ public class CircularSeekBar {
 
                         setText(Integer.toString(valueCounter) + "%");
                         setTextColor(Color.WHITE);
-                        setTextSize(30);
+                        setTextSize(40);
                         setTypeface(Typeface.createFromAsset(mContext.getAssets(),"DroidSans-Bold.ttf"));
                     }
                 }, new LayoutParams(0, 0) {
@@ -115,9 +114,11 @@ public class CircularSeekBar {
         };
         relativeLayout.setVisibility(View.INVISIBLE);
         layout.addView(relativeLayout, params);
+
     }
 
     public void show() {
+
         relativeLayout.setVisibility(View.VISIBLE);
     }
 

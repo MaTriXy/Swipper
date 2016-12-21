@@ -1,4 +1,4 @@
-package mdg.sds.swipper;
+package sds.mdg.swipper;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
