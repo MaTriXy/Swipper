@@ -5,7 +5,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context="sds.mdg.swipper.Main2Activity">
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:id="@+id/frame">
     <VideoView  android:layout_width="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
@@ -13,4 +17,5 @@
         android:layout_alignParentBottom="true"
         android:layout_height="fill_parent"
         android:id="@+id/videoView" />
+    </FrameLayout>
 </RelativeLayout>

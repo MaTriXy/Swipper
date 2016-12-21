@@ -2,6 +2,7 @@ package sds.mdg.swipper;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 import com.swipper.library.Swipper;
@@ -22,5 +23,8 @@ public class Main2Activity extends Swipper {
         Brightness(Orientation.VERTICAL);
         Volume(Orientation.CIRCULAR);
         Seek(Orientation.HORIZONTAL, videoView);
+        FrameLayout fl=(FrameLayout)findViewById(R.id.frame);
+        fl.getBackground().setAlpha(200);
+
     }
 }
