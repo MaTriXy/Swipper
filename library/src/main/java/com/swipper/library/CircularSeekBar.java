@@ -49,19 +49,19 @@ public class CircularSeekBar {
                         setStepAngle(3f);
                         setDiscArea(.35f, .48f);
                         setLastAngle((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360);
-//                        valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
-                        valueCounter = 40;
+                       valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
+//                        valueCounter = 23;
                         brightness = android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
                         WindowManager.LayoutParams layout = ((Activity) mContext).getWindow().getAttributes();
                         layout.screenBrightness = brightness / 255;
                         ((Activity) mContext).getWindow().setAttributes(layout);
                         if (Type == "Brightness") {
                             setLastAngle((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360);
-//                            valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
+                           valueCounter = (int) ((android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1) / 255) * 360 / 3f);
                             valueCounter = (int) ((100 / 255) * 360 / 3f);
                             brightness = android.provider.Settings.System.getFloat(getContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
                             WindowManager.LayoutParams layout1 = ((Activity) mContext).getWindow().getAttributes();
-//                            layout1.screenBrightness = brightness / 255;
+                           layout1.screenBrightness = brightness / 255;
                             layout1.screenBrightness = 1;
                             ((Activity) mContext).getWindow().setAttributes(layout1);
                         } else if (Type == "Volume") {
@@ -80,10 +80,10 @@ public class CircularSeekBar {
                             percent = valueCounter;
                             textView.setText(String.valueOf(valueCounter) + "%");
                             if (Type == "Brightness") {
-                               /* WindowManager.LayoutParams layout = ((Activity) mContext).getWindow().getAttributes();
+                               WindowManager.LayoutParams layout = ((Activity) mContext).getWindow().getAttributes();
                                 layout.screenBrightness = (float) ((double) valueCounter / (double) 100);
-                                ((Activity) mContext).getWindow().setAttributes(layout);*/
-                                Swipper.fl.getBackground().setAlpha((int) (((100-(double) valueCounter )/ (double) 100) * 255));
+                                ((Activity) mContext).getWindow().setAttributes(layout);
+//                                Swipper.fl.getBackground().setAlpha((int) (((100-(double) valueCounter )/ (double) 100) * 255));
                             } else if (Type == "Volume") {
                                 audio.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (((double) valueCounter / (double) 100) * 15), 0);
                             }

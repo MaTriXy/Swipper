@@ -22,8 +22,6 @@ public class Main2Activity extends Swipper {
         Brightness(Orientation.CIRCULAR);
         Volume(Orientation.VERTICAL);
         Seek(Orientation.HORIZONTAL, videoView);
-        FrameLayout fl=(FrameLayout)findViewById(R.id.frame);
-        fl.getBackground().setAlpha(100);
-        set(this,fl);
+        set(this);
     }
 }
