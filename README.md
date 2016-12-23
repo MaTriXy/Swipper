@@ -1,5 +1,5 @@
 # Swipper
-Android Library for custom views to control brightness , volume and seek through swipable gestures .
+Android Library for custom views to control brightness , volume and seek through swipable gestures . These views could easily replace the conventional volume / brightness / seek controls that we have in music player ,video player or gallery apps .
 <h3>Usage</h3>
  
  Extend the activity in which you want to implement by Swipper instead of Activity / AppCompatActivity like:
@@ -7,7 +7,7 @@ Android Library for custom views to control brightness , volume and seek through
  ```java
  public class MainActivity extends Swipper{}
  ```
- Pass the context of your activity in set(context) method like :
+ Pass the context of your activity in set(context) method in onCreate() of your activity like :
  ```java
  set(this)
  ```
@@ -20,11 +20,16 @@ Android Library for custom views to control brightness , volume and seek through
  ```java
  Volume(Orientation.CIRCULAR)
  ```
+ <h4>Circular custom view appears on double tapping the screen</h4>
+ 
 In seek method you need to pass your VideoView / Mediaplayer object along with orientation parameter , like:
+
 ```java
  MediaPlayer mediaPlayer=.....
  Seek(Orientation.HORIZONTAL,mediaPlayer)
  ```
+
+ 
   <h3>Orientations</h3>
  
 | Orientation        | Description         | 
