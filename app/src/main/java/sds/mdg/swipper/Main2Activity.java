@@ -19,12 +19,11 @@ public class Main2Activity extends Swipper {
         Uri video1 = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video);
         videoView.setVideoURI(video1);
         videoView.start();
-        set(this);
-        Brightness(Orientation.VERTICAL);
-        Volume(Orientation.CIRCULAR);
+        Brightness(Orientation.CIRCULAR);
+        Volume(Orientation.VERTICAL);
         Seek(Orientation.HORIZONTAL, videoView);
         FrameLayout fl=(FrameLayout)findViewById(R.id.frame);
-        fl.getBackground().setAlpha(255);
-
+        fl.getBackground().setAlpha(100);
+        set(this,fl);
     }
 }

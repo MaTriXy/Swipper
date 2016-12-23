@@ -149,6 +149,10 @@ public abstract class DialView extends View {
 
     protected abstract void onRotate(int offset);
 
+    public void drawAgain()
+    {
+        invalidate();
+    }
 
     public void drawArcSegment(Canvas can, float cx, float cy, float rInn, float rOut, float startAngle,
                                float sweepAngle, Paint fill, Paint stroke) {

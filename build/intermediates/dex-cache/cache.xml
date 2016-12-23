@@ -25,7 +25,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="95191c3bfc4c0fc94c34313361bbb2400a844c7d">
+        sha1="2ee383627496fd33c1719045dbb99fee3e91de9e">
         <dex dex="/home/pulkit/AndroidStudioProjects/Swipper/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_6667835c6ef8d2ec35b25e7bfe011e8953cd690e/classes.dex" />
     </item>
     <item
@@ -43,7 +43,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="6922c7c11fc1d4f93b4401cb2e4932c820dbcca0">
+        sha1="641a1eb0dfdefdb4ba8502ebab1c34826cd8eda4">
         <dex dex="/home/pulkit/AndroidStudioProjects/Swipper/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_7739da4876f1cd20d6629b6f3e07b3a2eb79fe0c/classes.dex" />
     </item>
     <item

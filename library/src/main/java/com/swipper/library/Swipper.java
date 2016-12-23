@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 import static android.view.MotionEvent.INVALID_POINTER_ID;
@@ -39,27 +40,32 @@ public class Swipper extends Activity {
     private String onHorizontal;
     private String onVertical;
     private String onCircular;
+    public static FrameLayout fl;
     public static String color = "#FB5B0A";
+    public int alphC=150;
 
 
-    public enum Orientation
-    {
-        HORIZONTAL,VERTICAL,CIRCULAR
+    public enum Orientation {
+        HORIZONTAL, VERTICAL, CIRCULAR
     }
 
-    public void set(Context context) {
+    public void set(Context context, FrameLayout f) {
         customView = new CustomView(context);
         seekView = new SeekView(context);
         brightness = android.provider.Settings.System.getFloat(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
         WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.screenBrightness = brightness / 255;
+//        layout.screenBrightness = brightness / 255;
+        layout.screenBrightness = 1;
         getWindow().setAttributes(layout);
-        customView.setProgress((int) ((brightness / 255) * 100));
+//        customView.setProgress((int) ((brightness / 255) * 100));
+        customView.setProgress((int)((200/255) * 100));
         customView.setProgressText(Integer.valueOf((int) ((brightness / 255) * 100)).toString() + "%");
         circularSeekBar = new CircularSeekBar(context);
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        fl = f;
+        fl.getBackground().setAlpha(alphC);
     }
 
     public static void setColor(String s) {
@@ -247,24 +253,38 @@ public class Swipper extends Activity {
             }
         }
     }
-
     public void commonBrightness(float distance) {
         WindowManager.LayoutParams layout = getWindow().getAttributes();
-        if (getWindow().getAttributes().screenBrightness + distance <= 1 && getWindow().getAttributes().screenBrightness + distance >= 0) {
+//        if (getWindow().getAttributes().screenBrightness + distance <= 1 && getWindow().getAttributes().screenBrightness + distance >= 0) {
+//            customView.show();
+//            if ((int) ((getWindow().getAttributes().screenBrightness + distance) * 100) > 100) {
+//                customView.setProgress(100);
+//                customView.setProgressText("100");
+//            } else if ((int) ((getWindow().getAttributes().screenBrightness + distance) * 100) < 0) {
+//                customView.setProgress(0);
+//                customView.setProgressText("0");
+//            } else {
+//                customView.setProgress((int) ((getWindow().getAttributes().screenBrightness + distance) * 100));
+//                customView.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness + distance) * 100)).toString() + "%");
+//            }
+////            layout.screenBrightness = getWindow().getAttributes().screenBrightness + distance;
+////            getWindow().setAttributes(layout);
+//        }
+        Log.e("((double)alphC)/255",((double)alphC)/255+"");
+        if (((double)alphC)/255 - distance <= 1 && ((double)alphC)/255 - distance >= 0) {
             customView.show();
-            if ((int) ((getWindow().getAttributes().screenBrightness + distance) * 100) > 100) {
-                customView.setProgress(100);
-                customView.setProgressText("100");
-            } else if ((int) ((getWindow().getAttributes().screenBrightness + distance) * 100) < 0) {
+            if ((int)((((double)alphC)/255 - distance)*100) > 100) {
                 customView.setProgress(0);
                 customView.setProgressText("0");
+            } else if ((int)((((double)alphC)/255 - distance) * 100) < 0) {
+                customView.setProgress(100);
+                customView.setProgressText("100");
             } else {
-                customView.setProgress((int) ((getWindow().getAttributes().screenBrightness + distance) * 100));
-                customView.setProgressText(Integer.valueOf((int) ((getWindow().getAttributes().screenBrightness + distance) * 100)).toString() + "%");
+                customView.setProgress((int)((1-(((double)alphC)/255 - distance)) * 100));
+                customView.setProgressText(Integer.valueOf((int) ((1-(((double)alphC)/255 - distance))* 100)).toString() + "%");
             }
-
-            layout.screenBrightness = getWindow().getAttributes().screenBrightness + distance;
-            getWindow().setAttributes(layout);
+            fl.getBackground().setAlpha((int)((((double)alphC)/255 - distance)*255));
+            alphC=(int)((((double)alphC)/255 - distance)*255);
         }
     }
 
