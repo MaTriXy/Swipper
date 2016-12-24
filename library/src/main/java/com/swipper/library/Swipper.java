@@ -266,22 +266,6 @@ public class Swipper extends Activity {
             layout.screenBrightness = getWindow().getAttributes().screenBrightness + distance;
             getWindow().setAttributes(layout);
         }
-//        Log.e("((double)alphC)/255",((double)alphC)/255+"");
-//        if (((double)alphC)/255 - distance <= 1 && ((double)alphC)/255 - distance >= 0) {
-//            customView.show();
-//            if ((int)((((double)alphC)/255 - distance)*100) > 100) {
-//                customView.setProgress(0);
-//                customView.setProgressText("0");
-//            } else if ((int)((((double)alphC)/255 - distance) * 100) < 0) {
-//                customView.setProgress(100);
-//                customView.setProgressText("100");
-//            } else {
-//                customView.setProgress((int)((1-(((double)alphC)/255 - distance)) * 100));
-//                customView.setProgressText(Integer.valueOf((int) ((1-(((double)alphC)/255 - distance))* 100)).toString() + "%");
-//            }
-//            fl.getBackground().setAlpha((int)((((double)alphC)/255 - distance)*255));
-//            alphC=(int)((((double)alphC)/255 - distance)*255);
-//        }
     }
 
     public void changeSeek(float X, float Y, float x, float y, float distance, String type) {
