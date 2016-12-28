@@ -4,7 +4,12 @@ Android Library for custom views to control brightness , volume and seek through
 <img src="https://raw.githubusercontent.com/pkarira/Swipper/19ec63a1f3833d8d12b21941bdf8bcd7fe8b62c0/library/src/main/res/drawable/finalfinal2.gif" width="250" height="400">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="https://raw.githubusercontent.com/pkarira/Swipper/19ec63a1f3833d8d12b21941bdf8bcd7fe8b62c0/library/src/main/res/drawable/finalfinal1.gif" width="250" height="400"><br><br>
 
-
+```java
+ dependencies
+ {
+ compile 'com.swipper.library:library:0.1.1'
+ }
+ ```
 
 <h3>Usage</h3>
  
